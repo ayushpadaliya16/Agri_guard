@@ -1,0 +1,369 @@
+[
+    {
+        "id": "chem_001",
+        "name": "Monocrotophos",
+        "aliases": [
+            "monocrotophos",
+            "nuvacron",
+            "azodrin",
+            "phoskill"
+        ],
+        "hazard_class": "Ia",
+        "hazard_type": "EXTREMELY HAZARDOUS",
+        "crops": [
+            "Cotton",
+            "Citrus",
+            "Maize"
+        ],
+        "side_effects": "Dizziness, sweating, breathing trouble, blurred vision, fainting.",
+        "first_aid": "Move to fresh air. If swallowed, induce vomiting ONLY if conscious. Wash skin with soap/water. Rush to hospital. Atropine is antidote.",
+        "precautions": "Wear full protective suit, gloves, mask, and boots. Do not spray against wind.",
+        "disposal": "Crush empty bottle, bury deep in soil away from water sources. Do not burn.",
+        "dosage": {
+            "default": 1.5,
+            "unit": "ml/L"
+        }
+    },
+    {
+        "id": "chem_002",
+        "name": "Phorate",
+        "aliases": [
+            "phorate",
+            "thimet",
+            "granutox"
+        ],
+        "hazard_class": "Ia",
+        "hazard_type": "EXTREMELY HAZARDOUS",
+        "crops": [
+            "Sugarcane",
+            "Cotton",
+            "Maize"
+        ],
+        "side_effects": "Nausea, cramps, weakness, paralysis of respiratory muscles.",
+        "first_aid": "Remove contaminated clothes. Wash eyes with water for 15 mins. Rush to doctor immediately.",
+        "precautions": "Do not touch granules with bare hands. Use gloves and applicator.",
+        "disposal": "Do not reuse container. Destroy and bury in landfill.",
+        "dosage": {
+            "default": 10,
+            "unit": "kg/acre"
+        }
+    },
+    {
+        "id": "chem_003",
+        "name": "Dichlorvos (DDVP)",
+        "aliases": [
+            "dichlorvos",
+            "ddvp",
+            "nuvan",
+            "doom"
+        ],
+        "hazard_class": "Ib",
+        "hazard_type": "HIGHLY HAZARDOUS",
+        "crops": [
+            "Vegetables",
+            "Fruit trees"
+        ],
+        "side_effects": "Headache, vomiting, muscle twitching, convulsions.",
+        "first_aid": "Give plenty of water. Do not give milk/oil. Artificial respiration if breathing stops. Atropine required.",
+        "precautions": "Use face shield. High vapor pressure - avoid inhaling fumes.",
+        "disposal": "Triple rinse container, pour rinse water into tank. Puncture and bury container.",
+        "dosage": {
+            "default": 1.0,
+            "unit": "ml/L"
+        }
+    },
+    {
+        "id": "chem_004",
+        "name": "Profenofos",
+        "aliases": [
+            "profenofos",
+            "curacron",
+            "celcron"
+        ],
+        "hazard_class": "II",
+        "hazard_type": "MODERATELY HAZARDOUS",
+        "crops": [
+            "Cotton",
+            "Soybean"
+        ],
+        "side_effects": "Nausea, abdominal pain, diarrhea, salivation.",
+        "first_aid": "Wash skin immediately. Flush eyes with water. Seek medical help.",
+        "precautions": "Wear rubber gloves and mask. Dangerous to fish - do not wash in ponds.",
+        "disposal": "Break bottle and bury away from habitation.",
+        "dosage": {
+            "default": 2.0,
+            "unit": "ml/L"
+        }
+    },
+    {
+        "id": "chem_005",
+        "name": "Cypermethrin",
+        "aliases": [
+            "cypermethrin",
+            "cymbush",
+            "ripcord",
+            "ammo",
+            "super killer"
+        ],
+        "hazard_class": "II",
+        "hazard_type": "MODERATELY HAZARDOUS",
+        "crops": [
+            "Cotton",
+            "Okra",
+            "Brinjal"
+        ],
+        "side_effects": "Skin burning/itching, numbness (paresthesia), dizziness.",
+        "first_aid": "Wash skin with soap. Vitamin E oil helps skin burning. Do not induce vomiting if swallowed.",
+        "precautions": "Avoid contact with skin/eyes. Token to bees/fish.",
+        "disposal": "Burn container in high temp incinerator or bury deep.",
+        "dosage": {
+            "default": 0.5,
+            "unit": "ml/L"
+        }
+    },
+    {
+        "id": "chem_006",
+        "name": "Chlorpyrifos",
+        "aliases": [
+            "chlorpyrifos",
+            "dursban",
+            "lorsban",
+            "classic",
+            "force"
+        ],
+        "hazard_class": "II",
+        "hazard_type": "MODERATELY HAZARDOUS",
+        "crops": [
+            "Rice",
+            "Cotton",
+            "Sugarcane"
+        ],
+        "side_effects": "Headache, blurred vision, muscle weakness.",
+        "first_aid": "Remove patient from area. Wash contaminated body parts. Atropine injection by doctor.",
+        "precautions": "Highly toxic to birds and fish. Do not spray near water bodies.",
+        "disposal": "Do not use empty container for food/water. Destroy and bury.",
+        "dosage": {
+            "default": 2.5,
+            "unit": "ml/L"
+        }
+    },
+    {
+        "id": "chem_007",
+        "name": "Imidacloprid",
+        "aliases": [
+            "imidacloprid",
+            "confidor",
+            "gaucho",
+            "admire",
+            "media"
+        ],
+        "hazard_class": "II",
+        "hazard_type": "MODERATELY HAZARDOUS",
+        "crops": [
+            "Cotton",
+            "Paddy",
+            "Chilli"
+        ],
+        "side_effects": "Apathy, breathing difficulty, tremors, cramps.",
+        "first_aid": "Symptomatic treatment. No specific antidote. Wash thoroughly.",
+        "precautions": "Toxic to honey bees. Do not spray during flowering season.",
+        "disposal": "Triple rinse and bury in wasteland.",
+        "dosage": {
+            "default": 0.5,
+            "unit": "ml/L"
+        }
+    },
+    {
+        "id": "chem_008",
+        "name": "Mancozeb",
+        "aliases": [
+            "mancozeb",
+            "dithane",
+            "indofil",
+            "uphane"
+        ],
+        "hazard_class": "III",
+        "hazard_type": "SLIGHTLY HAZARDOUS",
+        "crops": [
+            "Potato",
+            "Tomato",
+            "Wheat"
+        ],
+        "side_effects": "Skin irritation, throat irritation.",
+        "first_aid": "Wash eyes with water. Drink water to dilute. Consult doctor if irritation persists.",
+        "precautions": "Wear mask to avoid inhaling dust. Wear gloves.",
+        "disposal": "Bury empty packets in soil.",
+        "dosage": {
+            "default": 2.5,
+            "unit": "g/L"
+        }
+    },
+    {
+        "id": "chem_009",
+        "name": "Glyphosate",
+        "aliases": [
+            "glyphosate",
+            "roundup",
+            "glycel",
+            "weedoff"
+        ],
+        "hazard_class": "III",
+        "hazard_type": "SLIGHTLY HAZARDOUS",
+        "crops": [
+            "Non-crop areas",
+            "Tea",
+            "Coffee (Weedicide)"
+        ],
+        "side_effects": "Eye irritation, skin rash.",
+        "first_aid": "Flush eyes with water for 15 mins. Wash skin with soap.",
+        "precautions": "Avoid spray drift to nearby crops. Wear boots and gloves.",
+        "disposal": "Do not reuse container. Rinse and puncture.",
+        "dosage": {
+            "default": 5.0,
+            "unit": "ml/L"
+        }
+    },
+    {
+        "id": "chem_010",
+        "name": "Paraquat",
+        "aliases": [
+            "paraquat",
+            "gramoxone",
+            "parazone"
+        ],
+        "hazard_class": "Ib",
+        "hazard_type": "HIGHLY HAZARDOUS",
+        "crops": [
+            "Weedicide"
+        ],
+        "side_effects": "Severe lung damage, kidney failure, mouth ulcers.",
+        "first_aid": "Administer activated charcoal or Fuller's earth immediately. Rush to hospital. Fatal if swallowed.",
+        "precautions": "Never transfer to soft drink bottles. Fatal mistake!",
+        "disposal": "Destroy container completely. Do not wash in river.",
+        "dosage": {
+            "default": 4.0,
+            "unit": "ml/L"
+        }
+    },
+    {
+        "id": "chem_011",
+        "name": "Acephate",
+        "aliases": [
+            "acephate",
+            "starthene",
+            "orthene"
+        ],
+        "hazard_class": "III",
+        "hazard_type": "SLIGHTLY HAZARDOUS",
+        "crops": [
+            "Cotton",
+            "Safflower"
+        ],
+        "side_effects": "Nausea, trembling, blurred vision.",
+        "first_aid": "Induce vomiting. Wash skin properly. Consult doctor.",
+        "precautions": "Do not spray during high sunlight.",
+        "disposal": "Dispose empty packets by burning.",
+        "dosage": {
+            "default": 1.5,
+            "unit": "g/L"
+        }
+    },
+    {
+        "id": "chem_012",
+        "name": "Fipronil",
+        "aliases": [
+            "fipronil",
+            "regent",
+            "jump"
+        ],
+        "hazard_class": "II",
+        "hazard_type": "MODERATELY HAZARDOUS",
+        "crops": [
+            "Rice",
+            "Cabbage",
+            "Chilli",
+            "Sugarcane"
+        ],
+        "side_effects": "Irritability, tremors, convulsions.",
+        "first_aid": "Wash with soap and water. Get medical attention if symptoms persist.",
+        "precautions": "Very toxic to aquatic life with long lasting effects.",
+        "disposal": "Collect spillage. Dispose of contents/container to hazardous waste collection point.",
+        "dosage": {
+            "default": 1.5,
+            "unit": "ml/L"
+        }
+    },
+    {
+        "id": "chem_013",
+        "name": "Thiamethoxam",
+        "aliases": [
+            "thiamethoxam",
+            "actara",
+            "cruiser"
+        ],
+        "hazard_class": "III",
+        "hazard_type": "SLIGHTLY HAZARDOUS",
+        "crops": [
+            "Rice",
+            "Cotton",
+            "Tea",
+            "Okra"
+        ],
+        "side_effects": "No specific symptoms known. Treat symptomatically.",
+        "first_aid": "Wash skin thoroughly. Rinse eyes cautiously.",
+        "precautions": "Dangerous to bees. Do not apply when bees are foraging.",
+        "disposal": "Standard pesticide disposal procedures.",
+        "dosage": {
+            "default": 0.5,
+            "unit": "g/L"
+        }
+    },
+    {
+        "id": "chem_014",
+        "name": "Pendimethalin",
+        "aliases": [
+            "pendimethalin",
+            "stomp",
+            "panida"
+        ],
+        "hazard_class": "III",
+        "hazard_type": "SLIGHTLY HAZARDOUS",
+        "crops": [
+            "Cotton",
+            "Soybean",
+            "Rice"
+        ],
+        "side_effects": "Staining (yellow/orange), mild irritation.",
+        "first_aid": "Wash skin with soap and water. Stains can be persistent.",
+        "precautions": "Avoid contact with clothing as it stains heavily.",
+        "disposal": "Triple rinse containers.",
+        "dosage": {
+            "default": 5.0,
+            "unit": "ml/L"
+        }
+    },
+    {
+        "id": "chem_015",
+        "name": "Carbendazim",
+        "aliases": [
+            "carbendazim",
+            "bavistin",
+            "bemsit"
+        ],
+        "hazard_class": "III",
+        "hazard_type": "SLIGHTLY HAZARDOUS",
+        "crops": [
+            "Paddy",
+            "Wheat",
+            "Grapes"
+        ],
+        "side_effects": "Possible mutagenic effects. Skin sensitization.",
+        "first_aid": "Wash off immediately. Consult doctor if pregnant.",
+        "precautions": "Use protective clothing. Avoid generating dust.",
+        "disposal": "Dispose as hazardous waste.",
+        "dosage": {
+            "default": 1.0,
+            "unit": "g/L"
+        }
+    }
+]

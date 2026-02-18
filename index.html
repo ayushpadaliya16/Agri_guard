@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri-Guard | Antigravity Safety Protocol</title>
+    <meta name="description"
+        content="Scan pesticide labels instantly. Get safety instructions in your language. Protect Indian farmers from pesticide poisoning.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+Gujarati:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tesseract.js OCR -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Particle Background -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Danger Alert Overlay -->
+    <div id="danger-overlay" class="danger-overlay hidden">
+        <div class="danger-inner">
+            <div class="danger-icon">⚠️</div>
+            <h2 class="danger-title">DANGER DETECTED</h2>
+            <p class="danger-subtitle" id="danger-chemical">Toxic Chemical Identified</p>
+            <button class="danger-dismiss-btn" onclick="dismissDangerOverlay()">I UNDERSTAND — SHOW SAFETY INFO</button>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="app-container">
+
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-brand">
+                <div class="logo-glow">
+                    <svg class="logo-icon" viewBox="0 0 48 48" fill="none">
+                        <circle cx="24" cy="24" r="22" stroke="url(#logoGrad)" stroke-width="2" />
+                        <path d="M24 8L28 20H38L30 28L34 40L24 32L14 40L18 28L10 20H20L24 8Z" fill="url(#logoGrad)" />
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0" y1="0" x2="48" y2="48">
+                                <stop offset="0%" stop-color="#00ff88" />
+                                <stop offset="100%" stop-color="#00ccff" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="header-text">
+                    <h1 class="app-title">AGRI-GUARD</h1>
+                    <p class="app-subtitle">Antigravity Safety Protocol</p>
+                </div>
+            </div>
+            <div class="header-status">
+                <div class="status-dot" id="llm-status"></div>
+                <span class="status-text" id="llm-status-text">Connecting to AI...</span>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h2 class="hero-title" id="hero-title">
+                🌾 Photo Lo. <span class="text-gradient">Samjho.</span> Safe Raho.
+            </h2>
+            <div class="weather-widget" id="weather-widget">
+                <span id="weather-icon">🌤️</span>
+                <span id="weather-text">Mausam Saaf Hai - Spray Kar Sakte Hain</span>
+            </div>
+            <p class="hero-desc" id="hero-desc">
+                Dawai ki bottle ka photo lo — apni bhasha mein samjho ki kaise use karna hai.
+                Kisaano ki suraksha ke liye.
+            </p>
+        </section>
+
+        <!-- Upload Section -->
+        <section class="upload-section" id="upload-section">
+            <div class="upload-card" id="upload-card">
+                <div class="upload-zone" id="drop-zone">
+                    <div class="upload-icon-wrap">
+                        <svg class="upload-icon" viewBox="0 0 64 64" fill="none">
+                            <rect x="8" y="16" width="48" height="36" rx="4" stroke="currentColor" stroke-width="2" />
+                            <circle cx="32" cy="32" r="10" stroke="currentColor" stroke-width="2" />
+                            <circle cx="32" cy="32" r="4" fill="currentColor" />
+                            <circle cx="46" cy="22" r="2" fill="currentColor" />
+                        </svg>
+                    </div>
+                    <h3 class="upload-title" id="upload-title">📸 Dawai Ki Photo Daalo</h3>
+                    <p class="upload-hint" id="upload-hint">Bottle ya packet ki photo yahan daalo</p>
+                    <input type="file" id="file-input" accept="image/*" hidden>
+
+                    <div class="upload-actions">
+                        <button class="btn btn-primary" id="browse-btn">
+                            📁 Photo Chuno
+                        </button>
+                        <button class="btn btn-secondary" id="camera-btn">
+                            📷 Camera Se Lo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Image Preview -->
+                <div class="preview-container hidden" id="preview-container">
+                    <img id="preview-image" class="preview-image" alt="Uploaded pesticide label">
+                    <button class="btn btn-outline btn-sm" id="clear-btn">✕ Clear</button>
+                </div>
+            </div>
+
+            <!-- Language Selector -->
+            <div class="language-card">
+                <h3 class="card-label" id="lang-label">🗣️ Apni Bhasha Chuno</h3>
+                <div class="language-grid" id="language-grid">
+                    <button class="lang-btn active" data-lang="gu">🇮🇳 ગુજરાતી</button>
+                    <button class="lang-btn" data-lang="hi">🇮🇳 हिन्दी</button>
+                    <button class="lang-btn" data-lang="mr">🇮🇳 मराठी</button>
+                    <button class="lang-btn" data-lang="pa">🇮🇳 ਪੰਜਾਬੀ</button>
+                    <button class="lang-btn" data-lang="ta">🇮🇳 தமிழ்</button>
+                    <button class="lang-btn" data-lang="te">🇮🇳 తెలుగు</button>
+                    <button class="lang-btn" data-lang="kn">🇮🇳 ಕನ್ನಡ</button>
+                    <button class="lang-btn" data-lang="ml">🇮🇳 മലയാളം</button>
+                    <button class="lang-btn" data-lang="bn">🇮🇳 বাংলা</button>
+                    <button class="lang-btn" data-lang="or">🇮🇳 ଓଡ଼ିଆ</button>
+                </div>
+            </div>
+
+            <!-- Scan Button -->
+            <button class="btn btn-scan" id="scan-btn" disabled>
+                <span class="scan-btn-text" id="scan-btn-text">🔍 DAWAI JAANCHO</span>
+                <div class="scan-loader hidden" id="scan-loader">
+                    <div class="scanner-line"></div>
+                </div>
+            </button>
+        </section>
+
+        <!-- Processing Section -->
+        <section class="processing-section hidden" id="processing-section">
+            <div class="process-card">
+                <div class="process-steps">
+                    <div class="process-step" id="step-ocr">
+                        <div class="step-indicator"></div>
+                        <div class="step-info">
+                            <span class="step-label" id="step-ocr-label">📖 Photo padh rahe hain</span>
+                            <span class="step-status" id="step-ocr-status">Image se text nikal rahe hain...</span>
+                        </div>
+                    </div>
+                    <div class="process-step" id="step-threat">
+                        <div class="step-indicator"></div>
+                        <div class="step-info">
+                            <span class="step-label" id="step-threat-label">☠️ Zeher ki jaanch</span>
+                            <span class="step-status" id="step-threat-status">Khatarnak chemicals dhundh rahe
+                                hain...</span>
+                        </div>
+                    </div>
+                    <div class="process-step" id="step-reconstruct">
+                        <div class="step-indicator"></div>
+                        <div class="step-info">
+                            <span class="step-label" id="step-reconstruct-label">💧 Matra aur suraksha</span>
+                            <span class="step-status" id="step-reconstruct-status">Kitni dawai daalni hai woh nikal rahe
+                                hain...</span>
+                        </div>
+                    </div>
+                    <div class="process-step" id="step-translate">
+                        <div class="step-indicator"></div>
+                        <div class="step-info">
+                            <span class="step-label" id="step-translate-label">🗣️ Aapki bhasha mein badal rahe
+                                hain</span>
+                            <span class="step-status" id="step-translate-status">Anuvad ho raha hai...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <p class="progress-text" id="progress-text">Agri-Guard shuru ho raha hai...</p>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section hidden" id="results-section">
+
+            <!-- Danger Banner -->
+            <div class="result-danger-banner hidden" id="result-danger-banner">
+                <div class="danger-pulse"></div>
+                <span style="font-size: 2rem;">☠️</span>
+                <span id="danger-banner-text">⚠️ KHATARNAK ZEHER MILA — BAHUT SAVDHANI SE USE KARO!</span>
+            </div>
+
+            <!-- Results Grid -->
+            <div class="results-grid">
+                <!-- Headline Card -->
+                <div class="result-card result-headline">
+                    <div class="card-icon">🏷️</div>
+                    <h3 class="card-label">YEH KYA DAWAI HAI</h3>
+                    <p class="card-value" id="result-headline">—</p>
+                </div>
+
+                <!-- Dosage Card -->
+                <div class="result-card result-dosage">
+                    <div class="card-icon">💧</div>
+                    <h3 class="card-label">KITNI DAWAI DAALNI HAI</h3>
+                    <p class="card-value" id="result-dosage">—</p>
+                </div>
+
+                <!-- Safety Gear Card -->
+                <div class="result-card result-safety">
+                    <div class="card-icon">🧤</div>
+                    <h3 class="card-label">KYA PEHENNA HAI</h3>
+                    <p class="card-value" id="result-safety">—</p>
+                </div>
+
+                <!-- Warning Card -->
+                <div class="result-card result-warning">
+                    <div class="card-icon">🚨</div>
+                    <h3 class="card-label">KHATRE KI BAAT</h3>
+                    <p class="card-value" id="result-warning">—</p>
+                </div>
+            </div>
+
+            <!-- New Rich Data Sections -->
+            <div class="results-grid rich-grid" id="rich-info-grid">
+                <!-- Side Effects -->
+                <div class="result-card result-warning">
+                    <div class="card-icon">🤢</div>
+                    <h3 class="card-label" id="side-effects-label">SIDE EFFECTS</h3>
+                    <p class="card-value" id="result-side-effects">—</p>
+                </div>
+
+                <!-- First Aid -->
+                <div class="result-card result-safety">
+                    <div class="card-icon">🏥</div>
+                    <h3 class="card-label" id="first-aid-label">FIRST AID</h3>
+                    <p class="card-value" id="result-first-aid">—</p>
+                </div>
+
+                <!-- Disposal -->
+                <div class="result-card result-dosage">
+                    <div class="card-icon">🗑️</div>
+                    <h3 class="card-label" id="disposal-label">DISPOSAL</h3>
+                    <p class="card-value" id="result-disposal">—</p>
+                </div>
+            </div>
+
+            <!-- Feature Buttons -->
+            <div class="feature-actions">
+                <button class="btn btn-danger-glow" onclick="window.open('tel:112')">
+                    <span id="emergency-call-text">📞 Emergency: 112</span>
+                </button>
+                <button class="btn btn-secondary"
+                    onclick="document.getElementById('dosage-modal').classList.remove('hidden')">
+                    <span id="dose-calc-title">📊 Dosage Calculator</span>
+                </button>
+            </div>
+
+            <!-- Voice Section -->
+            <div class="voice-card">
+                <div class="voice-header">
+                    <h3 class="card-label">🔊 SUNKE SAMJHO</h3>
+                    <p class="voice-script" id="voice-script">—</p>
+                </div>
+                <button class="btn btn-voice" id="voice-btn" onclick="speakResults()">
+                    🔊 Suraksha Suno
+                </button>
+            </div>
+
+            <!-- Raw JSON Toggle -->
+            <details class="json-details">
+                <summary class="json-summary">🔧 View Raw JSON (Developer)</summary>
+                <pre class="json-output" id="json-output">{}</pre>
+            </details>
+
+            <!-- Scan Another -->
+            <button class="btn btn-primary btn-full" id="rescan-btn" onclick="resetApp()">
+                🔄 Aur Ek Dawai Jaancho
+            </button>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p id="footer-title">🌾 Kisaano Ki Suraksha — Agri-Guard</p>
+            <p class="footer-sub" id="footer-sub">AI se chalne wala · Bharat ke kisaano ke liye ❤️ se banaya</p>
+        </footer>
+    </div>
+
+    <!-- Camera Modal -->
+    <div class="modal hidden" id="camera-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📸 Capture Label</h3>
+                <button class="modal-close" onclick="closeCamera()">✕</button>
+            </div>
+            <video id="camera-video" autoplay playsinline></video>
+            <canvas id="camera-canvas" hidden></canvas>
+            <button class="btn btn-primary btn-full" id="capture-btn" onclick="capturePhoto()">Take Photo</button>
+        </div>
+    </div>
+
+    <!-- Dosage Calculator Modal -->
+    <div class="modal hidden" id="dosage-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="dose-calc-modal-title">📊 Dosage Calculator</h3>
+                <button class="modal-close"
+                    onclick="document.getElementById('dosage-modal').classList.add('hidden')">✕</button>
+            </div>
+            <div class="dose-form">
+                <label id="dose-field-size-label">Field Size (Acres)</label>
+                <input type="number" id="field-size" placeholder="e.g. 2.5">
+
+                <label id="dose-amount-label">Dose per Acre (ml/g)</label>
+                <input type="number" id="dose-per-acre" placeholder="e.g. 500">
+
+                <button class="btn btn-primary btn-full" id="dose-calculate-btn"
+                    onclick="calculateDosage()">Calculate</button>
+
+                <div class="dose-result hidden" id="dose-result-box">
+                    <p id="dose-result-label">Total Needed:</p>
+                    <h2 id="dose-total">--</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio element for danger alert -->
+    <audio id="danger-sound" preload="auto">
+        <!-- We'll generate this programmatically -->
+    </audio>
+
+    <!-- App Scripts -->
+    <script src="chemicals.js"></script>
+    <script src="translations.js"></script>
+    <script src="ui-translations.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
