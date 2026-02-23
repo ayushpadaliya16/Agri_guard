@@ -12,13 +12,21 @@ const PORT = process.env.PORT || 3001;
 // Initialize Groq
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// CORS — allow requests from any localhost port (dev) and same origin (prod)
+// CORS — allow localhost (dev) + Vercel (prod)
 app.use(cors({
     origin: function (origin, callback) {
-        // Allow requests with no origin (file://, curl, Postman)
+        // Allow requests with no origin (file://, curl, Postman, same-server SSR)
         if (!origin) return callback(null, true);
-        // Allow any localhost origin
+        // Allow any localhost origin (local dev)
         if (origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1')) {
+            return callback(null, true);
+        }
+        // Allow Vercel deployments (*.vercel.app or custom domains)
+        if (origin.includes('vercel.app') || origin.includes('agri-guard') || origin.includes('agriguard')) {
+            return callback(null, true);
+        }
+        // Allow the Render backend itself (self-requests)
+        if (origin.includes('onrender.com')) {
             return callback(null, true);
         }
         callback(new Error('Not allowed by CORS'));

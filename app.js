@@ -18,11 +18,10 @@ const state = {
 
 // ====== API CONFIG ======
 // Auto-detect backend URL:
-// - If served from the backend (localhost:3001), use same origin
-// - If opened as a file (file://) or from a different port, point to localhost:3001
-const API_BASE_URL = (window.location.protocol === 'file:' || window.location.port !== '3001')
-    ? 'http://localhost:3001'
-    : '';
+// - Local dev (localhost): use same origin (empty string)
+// - Production (Vercel or any other host): use deployed Render backend
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE_URL = isLocal ? '' : 'https://agri-guard-6535.onrender.com';
 
 // Legacy Ollama config (kept for backward compat, not actively used)
 const OLLAMA_URL = 'http://localhost:11434';
