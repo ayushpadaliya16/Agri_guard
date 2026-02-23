@@ -1,0 +1,36 @@
+{
+    "version": 2,
+    "buildCommand": "",
+    "outputDirectory": ".",
+    "framework": null,
+    "routes": [
+        {
+            "src": "/app.js",
+            "dest": "/app.js"
+        },
+        {
+            "src": "/style.css",
+            "dest": "/style.css"
+        },
+        {
+            "src": "/chemicals.js",
+            "dest": "/chemicals.js"
+        },
+        {
+            "src": "/translations.js",
+            "dest": "/translations.js"
+        },
+        {
+            "src": "/ui-translations.js",
+            "dest": "/ui-translations.js"
+        },
+        {
+            "src": "/info.html",
+            "dest": "/info.html"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/index.html"
+        }
+    ]
+}
