@@ -4,15 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agri-Guard | Antigravity Safety Protocol</title>
+    <title>Agri-Guard | AI Pesticide Safety for Indian Farmers</title>
     <meta name="description"
-        content="Scan pesticide labels instantly. Get safety instructions in your language. Protect Indian farmers from pesticide poisoning.">
+        content="Scan pesticide labels instantly. Get safety instructions in your language. Protect Indian farmers from pesticide poisoning. Supports 10 Indian languages.">
+    <meta name="theme-color" content="#138808">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+Gujarati:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Noto+Sans+Gujarati:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&display=swap"
         rel="stylesheet">
 
     <!-- Tesseract.js OCR -->
@@ -25,6 +26,11 @@
 <body>
     <!-- Particle Background -->
     <canvas id="particles-canvas"></canvas>
+
+    <!-- Animated Background Orbs -->
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
 
     <!-- Danger Alert Overlay -->
     <div id="danger-overlay" class="danger-overlay hidden">
@@ -39,7 +45,6 @@
     <!-- Main App Container -->
     <div class="app-container">
 
-        <!-- Header -->
         <header class="app-header">
             <div class="header-brand">
                 <div class="logo-glow">
@@ -48,40 +53,100 @@
                         <path d="M24 8L28 20H38L30 28L34 40L24 32L14 40L18 28L10 20H20L24 8Z" fill="url(#logoGrad)" />
                         <defs>
                             <linearGradient id="logoGrad" x1="0" y1="0" x2="48" y2="48">
-                                <stop offset="0%" stop-color="#00ff88" />
-                                <stop offset="100%" stop-color="#00ccff" />
+                                <stop offset="0%" stop-color="#FF9933" />
+                                <stop offset="100%" stop-color="#138808" />
                             </linearGradient>
                         </defs>
                     </svg>
                 </div>
                 <div class="header-text">
                     <h1 class="app-title">AGRI-GUARD</h1>
-                    <p class="app-subtitle">Antigravity Safety Protocol</p>
+                    <p class="app-subtitle">AI Safety Protocol</p>
                 </div>
             </div>
-            <div class="header-status">
-                <div class="status-dot" id="llm-status"></div>
-                <span class="status-text" id="llm-status-text">Connecting to AI...</span>
+            <div class="header-right">
+                <a href="info.html" class="header-info-link" id="nav-info-link">ℹ️ Info</a>
+                <div class="header-status">
+                    <div class="status-dot" id="llm-status"></div>
+                    <span class="status-text" id="llm-status-text">Connecting to AI...</span>
+                </div>
             </div>
         </header>
 
         <!-- Hero Section -->
-        <section class="hero-section">
+        <section class="hero-section fade-in-up" id="hero-section">
+            <div class="hero-badge" id="hero-badge">🌾 Bharat Ke Kisaano Ke Liye</div>
             <h2 class="hero-title" id="hero-title">
-                🌾 Photo Lo. <span class="text-gradient">Samjho.</span> Safe Raho.
+                📸 Photo Lo. <span class="text-gradient">Samjho.</span> Safe Raho.
             </h2>
-            <div class="weather-widget" id="weather-widget">
-                <span id="weather-icon">🌤️</span>
-                <span id="weather-text">Mausam Saaf Hai - Spray Kar Sakte Hain</span>
-            </div>
             <p class="hero-desc" id="hero-desc">
                 Dawai ki bottle ka photo lo — apni bhasha mein samjho ki kaise use karna hai.
                 Kisaano ki suraksha ke liye.
             </p>
+
+            <!-- Weather Widget -->
+            <div class="weather-widget" id="weather-widget">
+                <span id="weather-icon">🌤️</span>
+                <span id="weather-text">Mausam Saaf Hai - Spray Kar Sakte Hain</span>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-num">10</span>
+                    <span class="stat-label" id="stat-lang">Bhashayen</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-num">500+</span>
+                    <span class="stat-label">Chemicals</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-num">AI</span>
+                    <span class="stat-label">Powered</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-num">📶</span>
+                    <span class="stat-label" id="stat-offline">Offline Ready</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works fade-in-up" id="how-it-works-section">
+            <h3 class="section-title" id="how-it-works-title">Kaise Kaam Karta Hai?</h3>
+            <div class="steps-grid">
+                <div class="step-card step-card-clickable" id="step1-card" onclick="stepCardClick(1)"
+                    title="Click to upload photo">
+                    <div class="step-num">1</div>
+                    <div class="step-icon">📸</div>
+                    <h4 class="step-title" id="step1-title">Photo Lo</h4>
+                    <p class="step-desc" id="step1-desc">Dawai ki bottle ya packet ki photo lo ya gallery se upload karo
+                    </p>
+                </div>
+                <div class="step-connector">→</div>
+                <div class="step-card step-card-clickable" id="step2-card" onclick="stepCardClick(2)"
+                    title="Click to start AI scan">
+                    <div class="step-num">2</div>
+                    <div class="step-icon">🤖</div>
+                    <h4 class="step-title" id="step2-title">AI Jaanche</h4>
+                    <p class="step-desc" id="step2-desc">Hamara AI label padhega aur khatarnak chemicals dhundhega</p>
+                </div>
+                <div class="step-connector">→</div>
+                <div class="step-card step-card-clickable" id="step3-card" onclick="stepCardClick(3)"
+                    title="Click to view results">
+                    <div class="step-num">3</div>
+                    <div class="step-icon">🛡️</div>
+                    <h4 class="step-title" id="step3-title">Safe Raho</h4>
+                    <p class="step-desc" id="step3-desc">Apni bhasha mein suraksha ki jaankari pao aur safe rahon</p>
+                </div>
+            </div>
         </section>
 
         <!-- Upload Section -->
-        <section class="upload-section" id="upload-section">
+        <section class="upload-section fade-in-up" id="upload-section">
             <div class="upload-card" id="upload-card">
                 <div class="upload-zone" id="drop-zone">
                     <div class="upload-icon-wrap">
@@ -93,11 +158,17 @@
                         </svg>
                     </div>
                     <h3 class="upload-title" id="upload-title">📸 Dawai Ki Photo Daalo</h3>
-                    <p class="upload-hint" id="upload-hint">Bottle ya packet ki photo yahan daalo</p>
+                    <p class="upload-hint" id="upload-hint">Bottle ya packet ki photo yahan daalo ya drag karo</p>
                     <input type="file" id="file-input" accept="image/*" hidden>
 
                     <div class="upload-actions">
                         <button class="btn btn-primary" id="browse-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                <polyline points="17 8 12 3 7 8" />
+                                <line x1="12" y1="3" x2="12" y2="15" />
+                            </svg>
                             📁 Photo Chuno
                         </button>
                         <button class="btn btn-secondary" id="camera-btn">
@@ -117,13 +188,13 @@
             <div class="language-card">
                 <h3 class="card-label" id="lang-label">🗣️ Apni Bhasha Chuno</h3>
                 <div class="language-grid" id="language-grid">
-                    <button class="lang-btn active" data-lang="gu">🇮🇳 ગુજરાતી</button>
+                    <button class="lang-btn active" data-lang="en">🇬🇧 English</button>
+                    <button class="lang-btn" data-lang="gu">🇮🇳 ગુજરાતી</button>
                     <button class="lang-btn" data-lang="hi">🇮🇳 हिन्दी</button>
                     <button class="lang-btn" data-lang="mr">🇮🇳 मराठी</button>
                     <button class="lang-btn" data-lang="pa">🇮🇳 ਪੰਜਾਬੀ</button>
                     <button class="lang-btn" data-lang="ta">🇮🇳 தமிழ்</button>
                     <button class="lang-btn" data-lang="te">🇮🇳 తెలుగు</button>
-                    <button class="lang-btn" data-lang="kn">🇮🇳 ಕನ್ನಡ</button>
                     <button class="lang-btn" data-lang="ml">🇮🇳 മലയാളം</button>
                     <button class="lang-btn" data-lang="bn">🇮🇳 বাংলা</button>
                     <button class="lang-btn" data-lang="or">🇮🇳 ଓଡ଼ିଆ</button>
@@ -131,7 +202,7 @@
             </div>
 
             <!-- Scan Button -->
-            <button class="btn btn-scan" id="scan-btn" disabled>
+            <button class="btn btn-scan btn-disabled" id="scan-btn">
                 <span class="scan-btn-text" id="scan-btn-text">🔍 DAWAI JAANCHO</span>
                 <div class="scan-loader hidden" id="scan-loader">
                     <div class="scanner-line"></div>
@@ -142,6 +213,10 @@
         <!-- Processing Section -->
         <section class="processing-section hidden" id="processing-section">
             <div class="process-card">
+                <div class="process-header">
+                    <div class="process-spinner"></div>
+                    <h3 class="process-title" id="process-title">Agri-Guard Kaam Kar Raha Hai...</h3>
+                </div>
                 <div class="process-steps">
                     <div class="process-step" id="step-ocr">
                         <div class="step-indicator"></div>
@@ -197,33 +272,33 @@
                 <!-- Headline Card -->
                 <div class="result-card result-headline">
                     <div class="card-icon">🏷️</div>
-                    <h3 class="card-label">YEH KYA DAWAI HAI</h3>
+                    <h3 class="card-label" id="product-label">YEH KYA DAWAI HAI</h3>
                     <p class="card-value" id="result-headline">—</p>
                 </div>
 
                 <!-- Dosage Card -->
                 <div class="result-card result-dosage">
                     <div class="card-icon">💧</div>
-                    <h3 class="card-label">KITNI DAWAI DAALNI HAI</h3>
+                    <h3 class="card-label" id="mixing-label">KITNI DAWAI DAALNI HAI</h3>
                     <p class="card-value" id="result-dosage">—</p>
                 </div>
 
                 <!-- Safety Gear Card -->
                 <div class="result-card result-safety">
                     <div class="card-icon">🧤</div>
-                    <h3 class="card-label">KYA PEHENNA HAI</h3>
+                    <h3 class="card-label" id="safety-label">KYA PEHENNA HAI</h3>
                     <p class="card-value" id="result-safety">—</p>
                 </div>
 
                 <!-- Warning Card -->
                 <div class="result-card result-warning">
                     <div class="card-icon">🚨</div>
-                    <h3 class="card-label">KHATRE KI BAAT</h3>
+                    <h3 class="card-label" id="warning-label">KHATRE KI BAAT</h3>
                     <p class="card-value" id="result-warning">—</p>
                 </div>
             </div>
 
-            <!-- New Rich Data Sections -->
+            <!-- Rich Data Sections -->
             <div class="results-grid rich-grid" id="rich-info-grid">
                 <!-- Side Effects -->
                 <div class="result-card result-warning">
@@ -264,9 +339,16 @@
                     <h3 class="card-label">🔊 SUNKE SAMJHO</h3>
                     <p class="voice-script" id="voice-script">—</p>
                 </div>
-                <button class="btn btn-voice" id="voice-btn" onclick="speakResults()">
-                    🔊 Suraksha Suno
-                </button>
+                <div class="voice-controls">
+                    <button class="btn btn-voice" id="voice-btn" onclick="speakResults()" style="flex: 2;">
+                        🔊 Suraksha Suno
+                    </button>
+                    <button class="btn btn-secondary" id="voice-stop-btn" onclick="stopVoice()"
+                        style="flex: 1; background: #ff4757; color: white; border: none; opacity: 0.4; cursor: not-allowed;"
+                        disabled>
+                        ⏹️ Ruko
+                    </button>
+                </div>
             </div>
 
             <!-- Raw JSON Toggle -->
@@ -283,8 +365,23 @@
 
         <!-- Footer -->
         <footer class="app-footer">
+            <div class="footer-logo">
+                <svg width="24" height="24" viewBox="0 0 48 48" fill="none">
+                    <path d="M24 8L28 20H38L30 28L34 40L24 32L14 40L18 28L10 20H20L24 8Z" fill="url(#footerGrad)" />
+                    <defs>
+                        <linearGradient id="footerGrad" x1="0" y1="0" x2="48" y2="48">
+                            <stop offset="0%" stop-color="#FF9933" />
+                            <stop offset="100%" stop-color="#FFFFFF" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>AGRI-GUARD</span>
+            </div>
             <p id="footer-title">🌾 Kisaano Ki Suraksha — Agri-Guard</p>
             <p class="footer-sub" id="footer-sub">AI se chalne wala · Bharat ke kisaano ke liye ❤️ se banaya</p>
+            <p class="footer-disclaimer" id="footer-disclaimer">⚠️ Always follow official pesticide guidelines. This app
+                is for informational purposes only.</p>
+            <a href="info.html" class="footer-info-link" id="footer-info-link">ℹ️ About Agri-Guard</a>
         </footer>
     </div>
 
@@ -297,7 +394,7 @@
             </div>
             <video id="camera-video" autoplay playsinline></video>
             <canvas id="camera-canvas" hidden></canvas>
-            <button class="btn btn-primary btn-full" id="capture-btn" onclick="capturePhoto()">Take Photo</button>
+            <button class="btn btn-primary btn-full" id="capture-btn" onclick="capturePhoto()">📷 Take Photo</button>
         </div>
     </div>
 

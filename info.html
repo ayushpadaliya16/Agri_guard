@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri-Guard | About & Safety Information</title>
+    <meta name="description"
+        content="Official information about Agri-Guard — AI-powered pesticide safety app for Indian farmers. Safety guidelines, emergency contacts, and legal disclaimer.">
+    <meta name="theme-color" content="#0a1628">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a1628;
+            --surface: rgba(255, 255, 255, 0.04);
+            --surface-hover: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.08);
+            --green: #00ff88;
+            --cyan: #00ccff;
+            --saffron: #FF9933;
+            --white: #FFFFFF;
+            --india-green: #138808;
+            --text: #e8f4f8;
+            --text-muted: rgba(232, 244, 248, 0.6);
+            --radius: 16px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* ── TRICOLOR TOP STRIPE ── */
+        .tricolor-stripe {
+            height: 6px;
+            background: linear-gradient(to right, var(--saffron) 33.33%, var(--white) 33.33%, var(--white) 66.66%, var(--india-green) 66.66%);
+        }
+
+        /* ── HEADER ── */
+        .info-header {
+            background: rgba(10, 22, 40, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+        }
+
+        .brand-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--green), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 50px;
+            color: var(--green);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 255, 136, 0.2);
+            transform: translateX(-2px);
+        }
+
+        /* ── HERO BANNER ── */
+        .info-hero {
+            background: linear-gradient(135deg, rgba(255, 153, 51, 0.08) 0%, rgba(19, 136, 8, 0.08) 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 48px 24px;
+            text-align: center;
+        }
+
+        .gov-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(255, 153, 51, 0.15), rgba(19, 136, 8, 0.15));
+            border: 1px solid rgba(255, 153, 51, 0.3);
+            border-radius: 50px;
+            padding: 6px 18px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--saffron);
+            margin-bottom: 20px;
+            letter-spacing: 0.05em;
+        }
+
+        .info-hero h1 {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--green), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .info-hero p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ── MAIN CONTENT ── */
+        .info-main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        /* ── SECTION ── */
+        .info-section {
+            margin-bottom: 48px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .section-icon {
+            font-size: 1.8rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--green);
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: background 0.2s;
+        }
+
+        .card:hover {
+            background: var(--surface-hover);
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--cyan);
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── GRID ── */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        /* ── SAFETY RULES ── */
+        .safety-rule {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--green);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 12px;
+        }
+
+        .rule-num {
+            min-width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--green), var(--cyan));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: #0a1628;
+        }
+
+        .rule-text h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .rule-text p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* ── EMERGENCY CONTACTS ── */
+        .emergency-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .emergency-card {
+            background: rgba(255, 50, 50, 0.06);
+            border: 1px solid rgba(255, 50, 50, 0.2);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .emergency-card:hover {
+            background: rgba(255, 50, 50, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .emergency-card .em-icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .emergency-card .em-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ff6b6b;
+            display: block;
+        }
+
+        .emergency-card .em-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 4px;
+        }
+
+        /* ── LANGUAGE GRID ── */
+        .lang-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .lang-chip {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .lang-chip:hover {
+            background: rgba(0, 255, 136, 0.08);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .lang-chip .lang-name {
+            display: block;
+            font-size: 1.1rem;
+        }
+
+        .lang-chip .lang-en {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ── HOW TO USE STEPS ── */
+        .how-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .how-step {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            text-align: center;
+            position: relative;
+        }
+
+        .how-step-num {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--green), var(--cyan));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #0a1628;
+            margin: 0 auto 12px;
+        }
+
+        .how-step-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .how-step h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .how-step p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* ── DISCLAIMER ── */
+        .disclaimer-box {
+            background: rgba(255, 153, 51, 0.06);
+            border: 1px solid rgba(255, 153, 51, 0.25);
+            border-left: 4px solid var(--saffron);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+
+        .disclaimer-box h3 {
+            color: var(--saffron);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .disclaimer-box p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .disclaimer-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ── FOOTER ── */
+        .info-footer {
+            background: rgba(10, 22, 40, 0.8);
+            border-top: 1px solid var(--border);
+            padding: 32px 24px;
+            text-align: center;
+        }
+
+        .info-footer .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--green), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .info-footer p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+
+        .info-footer .tricolor-stripe {
+            margin-top: 24px;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 600px) {
+            .info-main {
+                padding: 24px 16px 60px;
+            }
+
+            .info-hero {
+                padding: 32px 16px;
+            }
+
+            .emergency-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Tricolor Top Stripe -->
+    <div class="tricolor-stripe"></div>
+
+    <!-- Header -->
+    <header class="info-header">
+        <div class="header-inner">
+            <a href="/" class="header-brand">
+                <svg class="brand-logo" viewBox="0 0 48 48" fill="none">
+                    <circle cx="24" cy="24" r="22" stroke="url(#hg)" stroke-width="2" />
+                    <path d="M24 8L28 20H38L30 28L34 40L24 32L14 40L18 28L10 20H20L24 8Z" fill="url(#hg)" />
+                    <defs>
+                        <linearGradient id="hg" x1="0" y1="0" x2="48" y2="48">
+                            <stop offset="0%" stop-color="#00ff88" />
+                            <stop offset="100%" stop-color="#00ccff" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="brand-title">AGRI-GUARD</span>
+            </a>
+            <a href="/" class="back-btn">🏠 Back to App</a>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <div class="info-hero">
+        <div class="gov-badge">🇮🇳 भारत सरकार प्रेरित · Inspired by Government of India</div>
+        <h1>🌾 Agri-Guard Information Portal</h1>
+        <p>AI-powered pesticide safety for India's 140 million farmers. Free, offline-capable, and available in 10
+            Indian languages.</p>
+    </div>
+
+    <!-- Main Content -->
+    <main class="info-main">
+
+        <!-- About Section -->
+        <section class="info-section">
+            <div class="section-header">
+                <span class="section-icon">ℹ️</span>
+                <h2>About Agri-Guard / Agri-Guard के बारे में</h2>
+            </div>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>🎯 Mission / उद्देश्य</h3>
+                    <p>Protect Indian farmers from pesticide poisoning by providing instant, AI-powered safety
+                        information in their native language. भारतीय किसानों को कीटनाशक विषाक्तता से बचाना।</p>
+                </div>
+                <div class="card">
+                    <h3>🤖 Technology / तकनीक</h3>
+                    <p>Uses OCR (Optical Character Recognition) to read pesticide labels and AI (Groq LLaMA) to analyze
+                        chemicals and provide safety guidance. ओसीआर और एआई तकनीक का उपयोग।</p>
+                </div>
+                <div class="card">
+                    <h3>📶 Offline Mode / ऑफलाइन मोड</h3>
+                    <p>Works without internet using local Tesseract OCR and an offline database of 500+ chemicals. No
+                        data is stored or shared. इंटरनेट के बिना भी काम करता है।</p>
+                </div>
+                <div class="card">
+                    <h3>🔒 Privacy / गोपनीयता</h3>
+                    <p>No personal data is collected. Images are processed locally and never stored on any server. कोई
+                        व्यक्तिगत डेटा एकत्र नहीं किया जाता।</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Safety Guidelines -->
+        <section class="info-section">
+            <div class="section-header">
+                <span class="section-icon">🛡️</span>
+                <h2>Pesticide Safety Rules / कीटनाशक सुरक्षा नियम</h2>
+            </div>
+
+            <div class="safety-rule">
+                <div class="rule-num">1</div>
+                <div class="rule-text">
+                    <h4>Always Read the Label / हमेशा लेबल पढ़ें</h4>
+                    <p>Before using any pesticide, read the entire label carefully. Follow all instructions exactly as
+                        written. Use only for the crops and pests listed on the label.</p>
+                </div>
+            </div>
+            <div class="safety-rule">
+                <div class="rule-num">2</div>
+                <div class="rule-text">
+                    <h4>Wear Protective Gear / सुरक्षा उपकरण पहनें</h4>
+                    <p>Always wear gloves, mask, goggles, and full-body clothing when handling pesticides. Never eat,
+                        drink, or smoke while spraying. दस्ताने, मास्क और चश्मा पहनें।</p>
+                </div>
+            </div>
+            <div class="safety-rule">
+                <div class="rule-num">3</div>
+                <div class="rule-text">
+                    <h4>Check Weather Conditions / मौसम जांचें</h4>
+                    <p>Never spray during rain, strong wind, or extreme heat. Spray early morning or late evening. Avoid
+                        spraying near water bodies. बारिश या तेज हवा में छिड़काव न करें।</p>
+                </div>
+            </div>
+            <div class="safety-rule">
+                <div class="rule-num">4</div>
+                <div class="rule-text">
+                    <h4>Correct Dosage / सही मात्रा</h4>
+                    <p>Use only the recommended dose. More is not better — excess pesticide harms crops, soil, and your
+                        health. Use the dosage calculator in the app. अधिक मात्रा हानिकारक है।</p>
+                </div>
+            </div>
+            <div class="safety-rule">
+                <div class="rule-num">5</div>
+                <div class="rule-text">
+                    <h4>Safe Storage & Disposal / सुरक्षित भंडारण</h4>
+                    <p>Store pesticides in original containers, locked away from children and food. Never pour leftover
+                        pesticide into water sources. Triple-rinse empty containers before disposal.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How to Use -->
+        <section class="info-section">
+            <div class="section-header">
+                <span class="section-icon">📱</span>
+                <h2>How to Use the App / ऐप कैसे उपयोग करें</h2>
+            </div>
+            <div class="how-steps">
+                <div class="how-step">
+                    <div class="how-step-num">1</div>
+                    <div class="how-step-icon">📸</div>
+                    <h4>Take Photo / फ़ोटो लें</h4>
+                    <p>Take a clear photo of the pesticide bottle or packet label. Ensure good lighting.</p>
+                </div>
+                <div class="how-step">
+                    <div class="how-step-num">2</div>
+                    <div class="how-step-icon">🗣️</div>
+                    <h4>Choose Language / भाषा चुनें</h4>
+                    <p>Select your preferred language from the 10 available Indian languages.</p>
+                </div>
+                <div class="how-step">
+                    <div class="how-step-num">3</div>
+                    <div class="how-step-icon">🔍</div>
+                    <h4>Scan / स्कैन करें</h4>
+                    <p>Press the Scan button. AI will read the label and identify chemicals.</p>
+                </div>
+                <div class="how-step">
+                    <div class="how-step-num">4</div>
+                    <div class="how-step-icon">✅</div>
+                    <h4>Read Safety Info / सुरक्षा जानकारी</h4>
+                    <p>View dosage, safety gear, warnings, and first aid in your language. Use voice feature to listen.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Supported Languages -->
+        <section class="info-section">
+            <div class="section-header">
+                <span class="section-icon">🗣️</span>
+                <h2>Supported Languages / समर्थित भाषाएँ</h2>
+            </div>
+            <div class="lang-grid">
+                <div class="lang-chip"><span class="lang-name">ગુજરાતી</span><span class="lang-en">Gujarati</span></div>
+                <div class="lang-chip"><span class="lang-name">हिन्दी</span><span class="lang-en">Hindi</span></div>
+                <div class="lang-chip"><span class="lang-name">मराठी</span><span class="lang-en">Marathi</span></div>
+                <div class="lang-chip"><span class="lang-name">ਪੰਜਾਬੀ</span><span class="lang-en">Punjabi</span></div>
+                <div class="lang-chip"><span class="lang-name">தமிழ்</span><span class="lang-en">Tamil</span></div>
+                <div class="lang-chip"><span class="lang-name">తెలుగు</span><span class="lang-en">Telugu</span></div>
+                <div class="lang-chip"><span class="lang-name">ಕನ್ನಡ</span><span class="lang-en">Kannada</span></div>
+                <div class="lang-chip"><span class="lang-name">മലയാളം</span><span class="lang-en">Malayalam</span></div>
+                <div class="lang-chip"><span class="lang-name">বাংলা</span><span class="lang-en">Bengali</span></div>
+                <div class="lang-chip"><span class="lang-name">ଓଡ଼ିଆ</span><span class="lang-en">Odia</span></div>
+            </div>
+        </section>
+
+        <!-- Emergency Contacts -->
+        <section class="info-section">
+            <div class="section-header">
+                <span class="section-icon">🚨</span>
+                <h2>Emergency Contacts / आपातकालीन संपर्क</h2>
+            </div>
+            <div class="emergency-grid">
+                <a href="tel:112" class="emergency-card">
+                    <div class="em-icon">🚑</div>
+                    <span class="em-number">112</span>
+                    <span class="em-label">National Emergency / राष्ट्रीय आपातकाल</span>
+                </a>
+                <a href="tel:18001116666" class="emergency-card">
+                    <div class="em-icon">☠️</div>
+                    <span class="em-number" style="font-size:1.3rem">1800-11-6666</span>
+                    <span class="em-label">Poison Control Helpline (Free)</span>
+                </a>
+                <a href="tel:18001801551" class="emergency-card">
+                    <div class="em-icon">🌾</div>
+                    <span class="em-number" style="font-size:1.3rem">1800-180-1551</span>
+                    <span class="em-label">Kisan Call Centre (Free) किसान कॉल सेंटर</span>
+                </a>
+                <a href="tel:108" class="emergency-card">
+                    <div class="em-icon">🏥</div>
+                    <span class="em-number">108</span>
+                    <span class="em-label">Ambulance / एम्बुलेंस</span>
+                </a>
+            </div>
+
+            <!-- First Aid for Pesticide Poisoning -->
+            <div class="card" style="margin-top:20px; border-left: 4px solid #ff6b6b;">
+                <h3>🏥 First Aid for Pesticide Poisoning / कीटनाशक विषाक्तता में प्रथमोपचार</h3>
+                <p style="margin-top:12px; color: var(--text);">
+                    <strong>If swallowed:</strong> Do NOT induce vomiting. Call 112 immediately. Show the pesticide
+                    label to the doctor.<br><br>
+                    <strong>If on skin:</strong> Remove contaminated clothing. Wash skin with soap and water for 15
+                    minutes.<br><br>
+                    <strong>If in eyes:</strong> Flush with clean water for 15–20 minutes. Seek medical help
+                    immediately.<br><br>
+                    <strong>If inhaled:</strong> Move to fresh air immediately. If not breathing, give artificial
+                    respiration. Call 112.
+                </p>
+            </div>
+        </section>
+
+        <!-- Legal Disclaimer -->
+        <section class="info-section">
+            <div class="section-header">
+                <span class="section-icon">⚖️</span>
+                <h2>Legal Disclaimer / कानूनी अस्वीकरण</h2>
+            </div>
+            <div class="disclaimer-box">
+                <h3>⚠️ Important Notice / महत्वपूर्ण सूचना</h3>
+                <p>Agri-Guard is an informational tool designed to assist farmers in understanding pesticide labels. The
+                    information provided by this application is for general guidance only and should not replace
+                    professional agricultural advice.</p>
+                <p>Always follow the manufacturer's instructions on the pesticide label. The app developers are not
+                    responsible for any harm caused by incorrect use of pesticides. When in doubt, consult a licensed
+                    agricultural officer (कृषि अधिकारी).</p>
+                <p>This application is not affiliated with or endorsed by any government body. Emergency contact numbers
+                    are provided for convenience and may vary by state.</p>
+                <p style="color: var(--saffron); font-weight: 600;">यह ऐप केवल मार्गदर्शन के लिए है। हमेशा लेबल पर दिए
+                    गए निर्देशों का पालन करें। किसी भी संदेह में कृषि अधिकारी से सलाह लें।</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="info-footer">
+        <div class="footer-logo">
+            <svg width="24" height="24" viewBox="0 0 48 48" fill="none">
+                <path d="M24 8L28 20H38L30 28L34 40L24 32L14 40L18 28L10 20H20L24 8Z" fill="url(#fg)" />
+                <defs>
+                    <linearGradient id="fg" x1="0" y1="0" x2="48" y2="48">
+                        <stop offset="0%" stop-color="#00ff88" />
+                        <stop offset="100%" stop-color="#00ccff" />
+                    </linearGradient>
+                </defs>
+            </svg>
+            AGRI-GUARD
+        </div>
+        <p>🌾 Kisaano Ki Suraksha — AI Powered Pesticide Safety</p>
+        <p>Made with ❤️ for India's 140 million farmers</p>
+        <p style="margin-top: 8px; font-size: 0.75rem;">Version 1.0.0 · Supports 10 Indian Languages · 500+ Chemicals
+            Database</p>
+        <div class="tricolor-stripe"></div>
+    </footer>
+
+</body>
+
+</html>

@@ -5,16 +5,26 @@
 
 // ====== STATE ======
 const state = {
-    selectedLang: 'gu',
+    selectedLang: 'en',
     imageFile: null,
     imageDataUrl: null,
     ocrText: '',
     result: null,
     isProcessing: false,
-    ollamaAvailable: false
+    ollamaAvailable: false,
+    shouldStopVoice: false,
+    currentAudio: null
 };
 
-// ====== OLLAMA CONFIG ======
+// ====== API CONFIG ======
+// Auto-detect backend URL:
+// - If served from the backend (localhost:3001), use same origin
+// - If opened as a file (file://) or from a different port, point to localhost:3001
+const API_BASE_URL = (window.location.protocol === 'file:' || window.location.port !== '3001')
+    ? 'http://localhost:3001'
+    : '';
+
+// Legacy Ollama config (kept for backward compat, not actively used)
 const OLLAMA_URL = 'http://localhost:11434';
 const OLLAMA_MODEL = 'llama3.2:latest';
 
@@ -26,7 +36,7 @@ const $$ = (sel) => document.querySelectorAll(sel);
 document.addEventListener('DOMContentLoaded', () => {
     initParticles();
     initEventListeners();
-    checkOllamaStatus();
+    checkBackendStatus();
     updateUILanguage(state.selectedLang);
 });
 
@@ -69,8 +79,14 @@ function initEventListeners() {
     // Camera
     cameraBtn.addEventListener('click', openCamera);
 
-    // Scan
-    scanBtn.addEventListener('click', startScan);
+    // Scan — if not ready (no image), show hint
+    scanBtn.addEventListener('click', () => {
+        if (scanBtn.classList.contains('btn-disabled')) {
+            showScanHint();
+            return;
+        }
+        startScan();
+    });
 
     // Language selector
     $$('.lang-btn').forEach(btn => {
@@ -82,6 +98,72 @@ function initEventListeners() {
         });
     });
 }
+
+// ====== STEP CARD CLICK HANDLERS ======
+// Step 1: scroll to upload section
+// Step 2: scroll to upload section and trigger scan (if image loaded)
+// Step 3: scroll to results section (if results exist)
+// Scroll to element accounting for sticky header offset
+function scrollToSection(el) {
+    if (!el) return;
+    const headerOffset = 90; // sticky header + tricolor ribbon
+    const top = el.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+}
+
+function stepCardClick(step) {
+    if (step === 1) {
+        const uploadSection = $('#upload-section');
+        if (uploadSection) {
+            scrollToSection(uploadSection);
+            const card = $('#upload-card');
+            if (card) {
+                card.style.transition = 'box-shadow 0.3s';
+                card.style.boxShadow = '0 0 0 3px rgba(19,136,8,0.5)';
+                setTimeout(() => { card.style.boxShadow = ''; }, 1200);
+            }
+        }
+    } else if (step === 2) {
+        const scanBtn = $('#scan-btn');
+        if (!scanBtn.classList.contains('btn-disabled')) {
+            scrollToSection(scanBtn);
+            setTimeout(() => startScan(), 400);
+        } else {
+            const uploadSection = $('#upload-section');
+            if (uploadSection) scrollToSection(uploadSection);
+            showScanHint();
+        }
+    } else if (step === 3) {
+        const resultsSection = $('#results-section');
+        if (resultsSection && !resultsSection.classList.contains('hidden')) {
+            scrollToSection(resultsSection);
+        } else {
+            showScanHint();
+        }
+    }
+}
+
+// ── Smooth scroll to the upload section ──
+function scrollToUpload() {
+    scrollToSection($('#upload-section'));
+}
+
+// ── Show a brief hint when scan button is clicked without an image ──
+function showScanHint() {
+    const hint = $('#upload-hint');
+    if (!hint) return;
+    const original = hint.textContent;
+    hint.textContent = '⬆️ Pehle photo upload karo, phir scan karo!';
+    hint.style.color = '#138808'; // India green (light theme fix)
+    hint.style.fontWeight = '700';
+    setTimeout(() => {
+        hint.textContent = original;
+        hint.style.color = '';
+        hint.style.fontWeight = '';
+    }, 2500);
+}
+
+
 
 // ====== FULL UI LANGUAGE SWITCHING ======
 function updateUILanguage(lang) {
@@ -200,6 +282,57 @@ function updateUILanguage(lang) {
     if (emergencyCall) emergencyCall.textContent = t.emergencyCall;
     const weatherWarn = $('#weather-warn');
     if (weatherWarn) weatherWarn.textContent = t.weatherWarn;
+
+    // ── NEW: Hero badge & stats bar ──
+    const heroBadge = $('#hero-badge');
+    if (heroBadge && t.heroBadge) heroBadge.textContent = t.heroBadge;
+    const statLang = $('#stat-lang');
+    if (statLang && t.statLang) statLang.textContent = t.statLang;
+    const statOffline = $('#stat-offline');
+    if (statOffline && t.statOffline) statOffline.textContent = t.statOffline;
+
+    // ── NEW: How It Works section ──
+    const howItWorksTitle = $('#how-it-works-title');
+    if (howItWorksTitle && t.howItWorksTitle) howItWorksTitle.textContent = t.howItWorksTitle;
+    const step1Title = $('#step1-title');
+    if (step1Title && t.step1Title) step1Title.textContent = t.step1Title;
+    const step1Desc = $('#step1-desc');
+    if (step1Desc && t.step1Desc) step1Desc.textContent = t.step1Desc;
+    const step2Title = $('#step2-title');
+    if (step2Title && t.step2Title) step2Title.textContent = t.step2Title;
+    const step2Desc = $('#step2-desc');
+    if (step2Desc && t.step2Desc) step2Desc.textContent = t.step2Desc;
+    const step3Title = $('#step3-title');
+    if (step3Title && t.step3Title) step3Title.textContent = t.step3Title;
+    const step3Desc = $('#step3-desc');
+    if (step3Desc && t.step3Desc) step3Desc.textContent = t.step3Desc;
+
+    // ── NEW: Processing title ──
+    const processTitle = $('#process-title');
+    if (processTitle && t.processingTitle) processTitle.textContent = t.processingTitle;
+
+    // ── NEW: Result card labels by ID ──
+    const productLabel = $('#product-label');
+    if (productLabel && t.productLabel) productLabel.textContent = t.productLabel.toUpperCase();
+    const mixingLabel = $('#mixing-label');
+    if (mixingLabel && t.mixingLabel) mixingLabel.textContent = t.mixingLabel.toUpperCase();
+    const safetyLabel = $('#safety-label');
+    if (safetyLabel && t.safetyLabel) safetyLabel.textContent = t.safetyLabel.toUpperCase();
+    const warningLabel = $('#warning-label');
+    if (warningLabel && t.warningLabel) warningLabel.textContent = t.warningLabel.toUpperCase();
+
+    // ── NEW: Footer disclaimer ──
+    const footerDisclaimer = $('#footer-disclaimer');
+    if (footerDisclaimer && t.footerDisclaimer) footerDisclaimer.textContent = t.footerDisclaimer;
+
+    // ── NEW: Nav info link ──
+    const navInfoLink = $('#nav-info-link');
+    if (navInfoLink && t.infoPageLink) navInfoLink.textContent = t.infoPageLink;
+    const footerInfoLink = $('#footer-info-link');
+    if (footerInfoLink && t.infoPageLink) footerInfoLink.textContent = t.infoPageLink;
+
+    // Update html lang attribute
+    document.documentElement.lang = lang;
 }
 
 // ====== IMAGE HANDLING ======
@@ -223,7 +356,7 @@ function showPreview(dataUrl) {
     previewImage.src = dataUrl;
     previewContainer.classList.remove('hidden');
     dropZone.classList.add('hidden');
-    $('#scan-btn').disabled = false;
+    $('#scan-btn').classList.remove('btn-disabled');
 }
 
 function clearImage() {
@@ -234,7 +367,7 @@ function clearImage() {
 
     previewContainer.classList.add('hidden');
     dropZone.classList.remove('hidden');
-    $('#scan-btn').disabled = true;
+    $('#scan-btn').classList.add('btn-disabled');
     $('#file-input').value = '';
 }
 
@@ -285,30 +418,36 @@ function capturePhoto() {
     }, 'image/jpeg', 0.92);
 }
 
-// ====== OLLAMA STATUS ======
-async function checkOllamaStatus() {
+// ====== BACKEND STATUS CHECK ======
+async function checkBackendStatus() {
     const dot = $('#llm-status');
     const text = $('#llm-status-text');
 
     try {
-        const res = await fetch(`${OLLAMA_URL}/api/tags`);
+        const res = await fetch(`${API_BASE_URL}/api/health`, { signal: AbortSignal.timeout(5000) });
         if (res.ok) {
             const data = await res.json();
-            const hasLlama = data.models?.some(m => m.name.includes('llama3.2'));
-            if (hasLlama) {
-                state.ollamaAvailable = true;
-                dot.classList.add('online');
-                dot.classList.remove('offline');
-                text.textContent = 'Llama 3.2 Online';
+            const groqOk = data.services?.groq === 'configured';
+            const dbOk = data.services?.db && data.services.db !== 'not_loaded';
+
+            state.ollamaAvailable = false; // not using Ollama
+            dot.classList.add('online');
+            dot.classList.remove('offline');
+
+            if (groqOk && dbOk) {
+                text.textContent = '✅ Backend Connected';
+            } else if (dbOk) {
+                text.textContent = '⚡ Backend (DB only)';
             } else {
-                dot.classList.add('offline');
-                text.textContent = 'Llama 3.2 not found';
+                text.textContent = '⚠️ Backend: Keys Missing';
             }
+        } else {
+            throw new Error('Non-OK response');
         }
     } catch (e) {
         dot.classList.add('offline');
         dot.classList.remove('online');
-        text.textContent = 'Ollama Offline (fallback mode)';
+        text.textContent = 'Offline Mode (Tesseract)';
         state.ollamaAvailable = false;
     }
 }
@@ -338,9 +477,45 @@ async function startScan() {
             throw new Error('NO_TEXT');
         }
 
-        setProgress(30, 'Text extracted. Analyzing threats...');
+        // ── Pesticide label validation ──
+        // Check if the extracted text contains any pesticide-related keywords.
+        // A real label will have at least one of: chemical names, dosage words,
+        // safety/warning terms, or registration numbers.
+        const pesticideKeywords = [
+            // Chemical / ingredient words
+            'chlor', 'phosph', 'sulph', 'sulfur', 'oxide', 'nitro', 'cyper',
+            'malath', 'endos', 'diazon', 'carbar', 'thiram', 'captan', 'zineb',
+            'mancoz', 'copper', 'lambda', 'deltam', 'imidacl', 'acetam',
+            'glyphos', 'paraquat', 'atrazin', 'herbic', 'fungic', 'insect',
+            'pesticide', 'keetnaashak', 'keetnashak', 'dawai', 'dawa',
+            // Dosage / usage words
+            'ml', 'gram', 'litre', 'liter', 'acre', 'hectare', 'dilut',
+            'spray', 'mix', 'dose', 'dosage', 'concentration', 'per',
+            'matra', 'mili', 'kilo',
+            // Safety / warning words
+            'poison', 'toxic', 'danger', 'warning', 'caution', 'hazard',
+            'antidote', 'first aid', 'keep away', 'wear', 'gloves', 'mask',
+            'khatre', 'zeher', 'savdhan', 'suraksha',
+            // Registration / label words
+            'reg. no', 'reg no', 'registration', 'batch', 'mfg', 'expiry',
+            'net content', 'manufactured', 'formulation', 'w/v', 'w/w', 'ec',
+            'wp', 'sc', 'sl', 'granule', 'emulsifiable',
+            // Crop words
+            'cotton', 'wheat', 'rice', 'paddy', 'maize', 'soybean', 'sugarcane',
+            'tomato', 'potato', 'onion', 'crop', 'fasal', 'gehu', 'chawal'
+        ];
+
+        const lowerOcr = ocrText.toLowerCase();
+        const hasPesticideKeyword = pesticideKeywords.some(kw => lowerOcr.includes(kw));
+
+        if (!hasPesticideKeyword) {
+            throw new Error('NOT_PESTICIDE_LABEL');
+        }
+
+        setProgress(30, 'Pesticide label confirmed. Analyzing threats...');
 
         let result;
+
 
         // ====== ALWAYS run deterministic extraction first (reliable) ======
 
@@ -383,17 +558,63 @@ async function startScan() {
     } catch (err) {
         console.error('Scan error:', err);
         if (err.message === 'NO_TEXT') {
-            alert('❌ Could not read any text from this image. Please try a clearer photo of the pesticide label.');
+            showScanError(
+                '📷 Image Not Readable',
+                'Could not read any text from this image.\nPlease take a clearer photo of the pesticide label with good lighting.'
+            );
+        } else if (err.message === 'NOT_PESTICIDE_LABEL') {
+            showScanError(
+                '🚫 Not a Pesticide Label',
+                'This image does not appear to be a pesticide bottle or packet label.\n\nPlease upload a photo of an actual pesticide/agrochemical product label.'
+            );
         } else {
-            alert('❌ An error occurred: ' + err.message);
+            showScanError('❌ Error', 'An error occurred: ' + err.message);
         }
         resetToUpload();
     }
 
+
     state.isProcessing = false;
 }
 
-// ====== PHASE 0: OCR ENGINE (Hybrid: Cloud -> Local) ======
+// ── Show a friendly in-page error when scan fails ──
+function showScanError(title, message) {
+    // Hide processing, show upload section with error card
+    $('#processing-section').classList.add('hidden');
+    $('#upload-section').classList.remove('hidden');
+
+    // Remove any existing error card
+    const existing = document.getElementById('scan-error-card');
+    if (existing) existing.remove();
+
+    const card = document.createElement('div');
+    card.id = 'scan-error-card';
+    card.style.cssText = `
+        background: #FFF5F5;
+        border: 1px solid rgba(198,40,40,0.3);
+        border-left: 4px solid #c62828;
+        border-radius: 16px;
+        padding: 20px 24px;
+        margin: 16px 0;
+        animation: fadeInUp 0.3s ease;
+    `;
+    card.innerHTML = `
+        <div style="font-size:1.5rem;margin-bottom:8px;color:#B71C1C;">${title}</div>
+        <p style="color:#555;font-size:0.95rem;white-space:pre-line;">${message}</p>
+        <button onclick="document.getElementById('scan-error-card').remove()"
+            style="margin-top:14px;padding:8px 18px;background:#FFEBEE;
+            border:1px solid rgba(198,40,40,0.4);border-radius:50px;color:#c62828;
+            cursor:pointer;font-size:0.85rem;font-family:inherit;font-weight:600;">
+            ✕ Dismiss
+        </button>
+    `;
+
+    // Insert before the scan button
+    const scanBtn = $('#scan-btn');
+    scanBtn.parentNode.insertBefore(card, scanBtn);
+}
+
+
 async function runOCR(imageDataUrl) {
     // 1. Try Cloud OCR (OCR.Space) via Backend
     try {
@@ -403,10 +624,11 @@ async function runOCR(imageDataUrl) {
         // Strip prefix if present for API
         const base64Image = imageDataUrl.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
 
-        const response = await fetch('http://localhost:3001/api/process-image', {
+        const response = await fetch(`${API_BASE_URL}/api/process-image`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: base64Image })
+            body: JSON.stringify({ image: base64Image }),
+            signal: AbortSignal.timeout(30000)
         });
 
         const data = await response.json();
@@ -596,8 +818,7 @@ async function runThreatDetection(text, language = 'en') {
         const timeoutId = setTimeout(() => controller.abort(), 8000); // Increased timeout for AI translation
 
         console.log("📡 Attempting Backend Analysis in " + language + "...");
-        // Use absolute URL to allow running frontend on 3000 and backend on 3001
-        const response = await fetch('http://localhost:3001/api/analyze', {
+        const response = await fetch(`${API_BASE_URL}/api/analyze`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text, language }),
@@ -643,19 +864,19 @@ function formatBackendResult(apiData) {
         isDangerous: true,
         chemicals: [{
             name: apiData.name,
-            class: apiData.class,
-            hazard: apiData.hazardType,
-            // Rich Data attached largely for buildResult to use
-            sideEffects: apiData.sideEffects,
-            firstAid: apiData.firstAid,
+            class: apiData.class || apiData.hazard_class,
+            hazard: apiData.hazardType || apiData.hazard_type,
+            // Rich Data attached largely for buildResult to use (handle both CamelCase from AI and snake_case from DB)
+            sideEffects: apiData.sideEffects || apiData.side_effects,
+            firstAid: apiData.firstAid || apiData.first_aid,
             disposal: apiData.disposal,
             precautions: apiData.precautions,
             dosage: apiData.dosage,
             crops: apiData.crops,
-            aliases: [apiData.name] // Shim for internal logic
+            aliases: apiData.aliases || [apiData.name] // Shim for internal logic
         }],
         keywords: [],
-        highestClass: apiData.class
+        highestClass: apiData.class || apiData.hazard_class
     };
 }
 
@@ -769,10 +990,10 @@ function buildResult(threatResult, dataResult, langCode) {
             mix_instruction: mixInstruction,
             safety_gear: gearList,
             warning_banner: t.warnings[warningKey],
-            // Rich Data
-            side_effects: dbMatch ? dbMatch.sideEffects : t.ui?.noInfo || "---",
-            first_aid: dbMatch ? dbMatch.firstAid : t.ui?.noInfo || "---",
-            disposal: dbMatch ? dbMatch.disposal : t.ui?.noInfo || "---"
+            // Rich Data (with robust fallback for 'Unknown')
+            side_effects: (dbMatch?.sideEffects && dbMatch.sideEffects.toLowerCase() !== 'unknown') ? dbMatch.sideEffects : "Nausea, dizziness, skin irritation. Wash immediately if exposed.",
+            first_aid: (dbMatch?.firstAid && dbMatch.firstAid.toLowerCase() !== 'unknown') ? dbMatch.firstAid : "Wash with plenty of water and soap. Remove contaminated clothing. Seek medical help.",
+            disposal: (dbMatch?.disposal && dbMatch.disposal.toLowerCase() !== 'unknown') ? dbMatch.disposal : "Do not reuse container. Triple rinse, crush/puncture and bury away from water sources."
         },
         voice_synthesis: {
             script: voiceScript
@@ -791,9 +1012,14 @@ function buildResult(threatResult, dataResult, langCode) {
 function displayResults(result) {
     const t = TRANSLATIONS[state.selectedLang];
 
-    // Hide processing, show results
+    // Hide everything except results
     $('#processing-section').classList.add('hidden');
+    $('#hero-section').classList.add('hidden');
+    $('#how-it-works-section').classList.add('hidden');
+    $('#upload-section').classList.add('hidden');
     $('#results-section').classList.remove('hidden');
+    // Scroll to top of results
+    setTimeout(() => scrollToSection($('#results-section')), 100);
 
     // Danger banner
     const ut = UI_TEXT[state.selectedLang] || UI_TEXT.hi;
@@ -888,25 +1114,51 @@ const GTTS_LANG_MAP = {
     bn: 'bn', or: 'or'
 };
 
+// Helper: set audio buttons to "playing" state
+function setVoicePlaying() {
+    const playBtn = $('#voice-btn');
+    const stopBtn = $('#voice-stop-btn');
+    if (playBtn) {
+        playBtn.disabled = true;
+        playBtn.style.opacity = '0.7';
+        playBtn.textContent = '🔊 Bol raha hai...';
+    }
+    if (stopBtn) {
+        stopBtn.disabled = false;
+        stopBtn.style.opacity = '1';
+        stopBtn.style.cursor = 'pointer';
+    }
+}
+
 function speakResults() {
     if (!state.result) return;
 
+    // Kill any existing audio inline (without touching UI buttons)
+    state.shouldStopVoice = true;
+    if (state.currentAudio) {
+        state.currentAudio.pause();
+        state.currentAudio = null;
+    }
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
     const script = state.result.voice_synthesis.script;
-    const btn = $('#voice-btn');
+
+    // Reset flag and activate UI
+    state.shouldStopVoice = false;
+    setVoicePlaying();
 
     // Try Google Translate TTS first (much better Indian language voices)
     const gttsLang = GTTS_LANG_MAP[state.selectedLang] || 'hi';
 
     try {
-        // Split text into chunks of ~200 chars (Google TTS limit)
         const chunks = splitTextForTTS(script, 200);
         let currentChunk = 0;
 
-        btn.textContent = '🔊 Bol raha hai...';
-
         function playNextChunk() {
+            if (state.shouldStopVoice) return;
+
             if (currentChunk >= chunks.length) {
-                btn.textContent = '🔊 Suraksha Suno';
+                stopVoice(); // All chunks done — reset UI
                 return;
             }
 
@@ -914,21 +1166,22 @@ function speakResults() {
             const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${gttsLang}&client=tw-ob&q=${encodeURIComponent(text)}`;
 
             const audio = new Audio(url);
+            state.currentAudio = audio;
             audio.playbackRate = 0.9;
 
             audio.onended = () => {
-                currentChunk++;
-                playNextChunk();
+                if (!state.shouldStopVoice) {
+                    currentChunk++;
+                    playNextChunk();
+                }
             };
 
             audio.onerror = () => {
-                // If Google TTS fails, fall back to browser TTS
                 console.warn('Google TTS failed, using browser fallback');
                 speakWithBrowserTTS(script);
             };
 
             audio.play().catch(() => {
-                // Autoplay blocked or offline — use browser TTS
                 speakWithBrowserTTS(script);
             });
         }
@@ -938,6 +1191,39 @@ function speakResults() {
     } catch (e) {
         console.warn('Google TTS error, using browser fallback:', e);
         speakWithBrowserTTS(script);
+    }
+}
+
+function stopVoice() {
+    state.shouldStopVoice = true;
+
+    // Stop Google TTS audio
+    if (state.currentAudio) {
+        state.currentAudio.pause();
+        state.currentAudio.onended = null;
+        state.currentAudio.onerror = null;
+        state.currentAudio = null;
+    }
+
+    // Stop browser TTS
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+    // Reset UI
+    const playBtn = $('#voice-btn');
+    const stopBtn = $('#voice-stop-btn');
+
+    if (playBtn) {
+        playBtn.disabled = false;
+        playBtn.style.opacity = '1';
+        // Restore translated label if available, else fallback
+        const t = TRANSLATIONS[state.selectedLang];
+        playBtn.textContent = (t && t.voiceBtn) ? t.voiceBtn : '🔊 Suraksha Suno';
+    }
+
+    if (stopBtn) {
+        stopBtn.disabled = true;
+        stopBtn.style.opacity = '0.4';
+        stopBtn.style.cursor = 'not-allowed';
     }
 }
 
@@ -968,10 +1254,13 @@ function splitTextForTTS(text, maxLen) {
 }
 
 function speakWithBrowserTTS(script) {
+    if (state.shouldStopVoice) return; // User already clicked stop
+
     const t = TRANSLATIONS[state.selectedLang];
 
     if (!('speechSynthesis' in window)) {
-        alert('Text-to-speech is not available. Please make sure you are online for Google voice.');
+        alert('Text-to-speech is not available in your browser.');
+        stopVoice();
         return;
     }
 
@@ -997,12 +1286,15 @@ function speakWithBrowserTTS(script) {
         utterance.lang = fullLangCode;
     }
 
+    // Ensure stop button is active while speaking
+    setVoicePlaying();
+
     window.speechSynthesis.speak(utterance);
 
-    const btn = $('#voice-btn');
-    btn.textContent = `🔊 Bol raha hai (${selectedVoice?.name || 'Browser'})...`;
-    utterance.onend = () => {
-        btn.textContent = '🔊 Suraksha Suno';
+    utterance.onend = () => stopVoice();
+    utterance.onerror = (e) => {
+        console.warn('Browser TTS error:', e);
+        stopVoice();
     };
 }
 
@@ -1035,7 +1327,13 @@ function resetToUpload() {
     setProgress(0, '');
 
     state.isProcessing = false;
-    $('#scan-btn').disabled = !state.imageDataUrl;
+    const scanBtn = $('#scan-btn');
+    scanBtn.disabled = false; // Fix: Re-enable the button interaction (it was disabled in startScan)
+    if (state.imageDataUrl) {
+        scanBtn.classList.remove('btn-disabled');
+    } else {
+        scanBtn.classList.add('btn-disabled');
+    }
 }
 
 function resetApp() {
@@ -1043,6 +1341,11 @@ function resetApp() {
     resetToUpload();
     state.result = null;
     state.ocrText = '';
+    // Restore all sections
+    $('#hero-section').classList.remove('hidden');
+    $('#how-it-works-section').classList.remove('hidden');
+    // Scroll back to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function sleep(ms) {
@@ -1052,6 +1355,8 @@ function sleep(ms) {
 // ====== PARTICLE BACKGROUND ======
 function initParticles() {
     const canvas = $('#particles-canvas');
+    // Canvas is hidden in the light GoI theme — skip drawing to save CPU
+    if (!canvas || canvas.style.display === 'none' || getComputedStyle(canvas).display === 'none') return;
     const ctx = canvas.getContext('2d');
     let particles = [];
     let animFrame;

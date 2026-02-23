@@ -397,5 +397,47 @@ const TRANSLATIONS = {
 
         voiceTemplate: (productName, warning) =>
             `ଧ୍ୟାନ ଦିଅନ୍ତୁ! ${productName} ବିଷାକ୍ତ ଔଷଧ। ${warning} ଔଷଧ ବ୍ୟବହାର ପୂର୍ବରୁ ସୁରକ୍ଷା ସାମଗ୍ରୀ ନିଶ୍ଚିତ ଭାବରେ ପିନ୍ଧନ୍ତୁ।`
+    },
+
+    // --- English ---
+    en: {
+        langName: "English",
+        langCode: "en-IN",
+        fontFamily: "'Inter', sans-serif",
+
+        ui: {
+            product: "Product",
+            mixing: "Mixing Instructions",
+            safetyGear: "Safety Equipment",
+            warning: "Warning",
+            contactDealer: "Contact your dealer",
+            noTextDetected: "No text detected",
+            noInfo: "---"
+        },
+
+        gear: {
+            gloves: "Wear rubber gloves",
+            mask: "Cover nose & mouth / wear mask",
+            goggles: "Wear safety goggles",
+            boots: "Wear rubber boots",
+            apron: "Wear apron to cover body",
+            fullBody: "Cover full body"
+        },
+
+        warnings: {
+            extremelyHazardous: "⚠️ EXTREMELY HAZARDOUS POISON! Keep away from children and animals. Do not touch directly!",
+            highlyHazardous: "⚠️ HIGHLY HAZARDOUS! Do not use without gloves and mask. Do not let it touch skin!",
+            moderatelyHazardous: "⚠️ HAZARDOUS chemical. Safety equipment and mask are required.",
+            slightlyHazardous: "ℹ️ Use with caution. Wear gloves and wash hands after spraying.",
+            generic: "⚠️ WARNING: This is a chemical pesticide. Use with caution and wear safety equipment!"
+        },
+
+        dosageTemplate: (amount, unit, perAmount, perUnit) =>
+            `Mix ${amount} ${unit === 'ml' ? 'ml' : 'grams'} of pesticide in ${perAmount} ${perUnit === 'liter' ? 'liters' : perUnit} of water`,
+
+        voiceTemplate: (productName, warning) =>
+            `Attention! ${productName} is a toxic pesticide. ${warning} Always wear safety equipment before using this pesticide.`
     }
 };
+
+
